@@ -13,7 +13,7 @@ public interface ContentService {
 
     Content updateContent(Content content);
 
-    Content deleteContent(int id);
+    Boolean deleteContent(int id);
 
     Content getContentById(int id);
 }

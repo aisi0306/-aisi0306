@@ -1,10 +1,7 @@
 package com.kaola.demo.dao;
 
 import com.kaola.demo.meta.Content;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -25,5 +22,8 @@ public interface ContentMapper {
     @Update("UPDATE content SET title=#{title},price=#{price},picture_url=#{pictureUrl}" +
             ",remark=#{remark},text=#{text} WHERE id=#{id}")
     Content updateContent(Content content);
+
+    @Delete("DELETE * FROM content WHERE id=#{id}")
+    Boolean deleteContent(int id);
 
 }
