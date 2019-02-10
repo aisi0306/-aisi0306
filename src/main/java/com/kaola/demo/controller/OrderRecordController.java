@@ -24,8 +24,7 @@ public class OrderRecordController {
     public ResultMap getOrderRecord(int userId){
 
         List<OrderRecordVo> recordVos = orderRecordService.getOrderRecordByUserId(userId);
-        ResultMap resultMap = ResultMap.genResultMap(CodeMsg.SUCCESS);
-        resultMap.setData(recordVos);
+        ResultMap resultMap = ResultMap.genResultMap(CodeMsg.SUCCESS,recordVos);
         return resultMap;
     }
 

@@ -7,7 +7,8 @@ public enum CodeMsg {
     SUCCESS(200,"success"),
     PWS_ERROR(300,"密码错误"),
     ACC_NOT_EXISTS(301,"账号不存在"),
-
+    CONTENT_ERROR(303,"内容格式错误"),
+    ERROR(304,"错误"),
 
 
     ;

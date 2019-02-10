@@ -33,4 +33,17 @@ public class ResultMap<T> {
         resultMap.setMessage(codeMsg.getMessage());
         return resultMap;
     }
+    public static ResultMap genResultMap(CodeMsg codeMsg,String msg){
+        ResultMap resultMap = new ResultMap();
+        resultMap.setCode(codeMsg.getCode());
+        resultMap.setMessage(msg);
+        return resultMap;
+    }
+    public static ResultMap genResultMap(CodeMsg codeMsg,Object o){
+        ResultMap resultMap = new ResultMap();
+        resultMap.setCode(codeMsg.getCode());
+        resultMap.setMessage(codeMsg.getMessage());
+        resultMap.setData(o);
+        return resultMap;
+    }
 }

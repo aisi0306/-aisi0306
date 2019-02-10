@@ -52,8 +52,7 @@ public class IndexServiceImpl implements IndexService {
             }
             contentVos.add(contentVo);
         }
-        ResultMap resultMap = ResultMap.genResultMap(CodeMsg.SUCCESS);
-        resultMap.setData(contentVos);
+        ResultMap resultMap = ResultMap.genResultMap(CodeMsg.SUCCESS,contentVos);
         return resultMap;
     }
 }

@@ -21,16 +21,62 @@ public class ContentController {
     @GetMapping("/getContent")
     public ResultMap getContent(int id){
         Content content = contentService.getContentById(id);
-        ResultMap resultMap = new ResultMap();
-        resultMap.setData(content);
-        resultMap.setCode(CodeMsg.SUCCESS.getCode());
-        return resultMap;
+        return ResultMap.genResultMap(CodeMsg.SUCCESS,content);
+    }
+
+    @GetMapping("/addContent")
+    public ResultMap addContent(Content content){
+        String s = checkContent(content);
+        if( s != null){
+            return ResultMap.genResultMap(CodeMsg.CONTENT_ERROR,s);
+        }
+        Content addContent = contentService.addContent(content);
+        if(addContent == null){
+            return ResultMap.genResultMap(CodeMsg.ERROR);
+        }else {
+            return ResultMap.genResultMap(CodeMsg.SUCCESS,addContent);
+        }
+
     }
 
     @GetMapping("/updateContent")
     public ResultMap updateContent(Content content){
-        contentService
+        String s = checkContent(content);
+        if( s != null){
+            return ResultMap.genResultMap(CodeMsg.CONTENT_ERROR,s);
+        }
+        Content updateContent = contentService.updateContent(content);
+        if(updateContent == null){
+            return ResultMap.genResultMap(CodeMsg.ERROR);
+        }else {
+           return ResultMap.genResultMap(CodeMsg.SUCCESS,updateContent);
+        }
+
+    }
+
+    @GetMapping("/deleteContent")
+    public ResultMap deleteContent(int id){
+       Boolean result = contentService.deleteContent(id);
+        if(!result){
+            return ResultMap.genResultMap(CodeMsg.ERROR);
+        }else {
+            return ResultMap.genResultMap(CodeMsg.SUCCESS);
+        }
+
     }
 
 
+
+    public String checkContent(Content content){
+        if(content.getTitle().length()<2 || content.getTitle().length() >80){
+            return "标题长度要在2到80字符之内";
+        }
+        if(content.getRemark().length()<2 || content.getRemark().length() >140){
+            return "摘要长度要在2到140字符之内";
+        }
+        if(content.getText().length()<2 || content.getText().length() >1000){
+            return "正文长度要在2到1000字符之内";
+        }
+        return null;
+    }
 }
