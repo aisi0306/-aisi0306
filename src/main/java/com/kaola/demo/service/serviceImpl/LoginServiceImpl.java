@@ -1,7 +1,7 @@
 package com.kaola.demo.service.serviceImpl;
 
 
-import com.kaola.demo.dao.UserMapper;
+import com.kaola.demo.mapper.UserMapper;
 import com.kaola.demo.enums.CodeMsg;
 import com.kaola.demo.meta.User;
 import com.kaola.demo.model.ResultMap;

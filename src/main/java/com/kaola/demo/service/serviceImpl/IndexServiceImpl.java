@@ -2,8 +2,8 @@ package com.kaola.demo.service.serviceImpl;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import com.kaola.demo.dao.ContentMapper;
-import com.kaola.demo.dao.OrderRecordMapper;
+import com.kaola.demo.mapper.ContentMapper;
+import com.kaola.demo.mapper.OrderRecordMapper;
 import com.kaola.demo.enums.CodeMsg;
 import com.kaola.demo.enums.GoodType;
 import com.kaola.demo.meta.Content;

@@ -1,20 +1,23 @@
 package com.kaola.demo.service.serviceImpl;
 
 import com.google.common.collect.Lists;
-import com.kaola.demo.dao.ContentMapper;
-import com.kaola.demo.dao.OrderRecordMapper;
+import com.kaola.demo.mapper.ContentMapper;
+import com.kaola.demo.mapper.OrderRecordMapper;
 import com.kaola.demo.meta.Content;
 import com.kaola.demo.meta.OrderRecord;
 import com.kaola.demo.service.OrderRecordService;
 import com.kaola.demo.vo.OrderRecordVo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 /**
  * @Author: li ying
  * @Date: 2019/1/17 20:56
  */
+@Service
 public class OrderRecordServiceImpl implements OrderRecordService {
 
     @Autowired

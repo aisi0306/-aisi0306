@@ -1,4 +1,4 @@
-package com.kaola.demo.dao;
+package com.kaola.demo.mapper;
 
 import com.kaola.demo.meta.Content;
 import org.apache.ibatis.annotations.*;

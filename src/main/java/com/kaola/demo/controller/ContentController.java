@@ -6,7 +6,16 @@ import com.kaola.demo.model.ResultMap;
 import com.kaola.demo.service.ContentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.IOException;
+import java.util.UUID;
 
 /**
  * @Author: li ying
@@ -15,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ContentController {
 
-    @Autowired
+    @Resource
     private ContentService contentService;
 
     @GetMapping("/getContent")
@@ -65,7 +74,44 @@ public class ContentController {
 
     }
 
+    @PostMapping("/upload")
+    public ResultMap uploadPic(HttpServletRequest request){
+        try {
+            MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
+            // 将文件放置位置设置为静态资源目录image中
+            String logoPathDir = request.getSession().getServletContext().getRealPath("/") +"/image/";
+            File logoSaveFile = new File(logoPathDir);
+            if (!logoSaveFile.exists()){
+                logoSaveFile.mkdirs();
+            }
+            // 页面控件的文件流
+            MultipartFile multipartFile = multipartRequest.getFile("file");
+            // 获取文件的后缀
+            String suffix = multipartFile.getOriginalFilename().substring(
+                    multipartFile.getOriginalFilename().lastIndexOf("."));
+            // 使用UUID生成文件名称
+            String imageName = UUID.randomUUID().toString() + suffix;
 
+            // 拼成完整的文件保存路径加文件
+            String fileName = logoPathDir + imageName;
+            File file = new File(fileName);
+            try {
+                multipartFile.transferTo(file);
+            } catch (IllegalStateException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            // 生成图片网址
+            String imgUrl = request.getScheme() + "://"
+                    + request.getServerName() + ":" + request.getServerPort()
+                    + request.getContextPath() + "/image/" + imageName;
+
+            return ResultMap.genResultMap(CodeMsg.SUCCESS,imgUrl);
+        } catch (Exception e) {
+            return ResultMap.genResultMap(CodeMsg.ERROR);
+        }
+    }
 
     public String checkContent(Content content){
         if(content.getTitle().length()<2 || content.getTitle().length() >80){

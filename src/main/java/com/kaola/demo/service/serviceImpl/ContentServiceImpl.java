@@ -1,14 +1,15 @@
 package com.kaola.demo.service.serviceImpl;
 
 import com.google.common.collect.Lists;
-import com.kaola.demo.dao.ContentMapper;
-import com.kaola.demo.dao.OrderRecordMapper;
+import com.kaola.demo.mapper.ContentMapper;
+import com.kaola.demo.mapper.OrderRecordMapper;
 import com.kaola.demo.meta.Content;
 import com.kaola.demo.meta.OrderRecord;
 import com.kaola.demo.service.ContentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -16,6 +17,7 @@ import java.util.List;
  * @Author: li ying
  * @Date: 2019/1/21 19:25
  */
+@Service
 public class ContentServiceImpl implements ContentService {
 
     private static Logger logger = LoggerFactory.getLogger(ContentServiceImpl.class);
