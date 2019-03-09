@@ -28,7 +28,7 @@ public class LoginServiceImpl implements LoginService {
         if(null == user){
             return ResultMap.genResultMap(CodeMsg.ACC_NOT_EXISTS);
         }
-        if(password != user.getPassword()){
+        if(!password.equals(user.getPassword())){
             return ResultMap.genResultMap(CodeMsg.PWS_ERROR);
         }
         ResultMap resultMap = ResultMap.genResultMap(CodeMsg.SUCCESS);

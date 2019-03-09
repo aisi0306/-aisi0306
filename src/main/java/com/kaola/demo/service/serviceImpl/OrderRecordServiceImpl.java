@@ -53,7 +53,15 @@ public class OrderRecordServiceImpl implements OrderRecordService {
 
     @Override
     public OrderRecord addOrderRecord(OrderRecord orderRecord) {
-        OrderRecord record = orderRecordMapper.addOrderRecord(orderRecord);
-        return record;
+        Integer result = 0;
+        try{
+            result   = orderRecordMapper.addOrderRecord(orderRecord);
+        }catch (Exception e){
+            return null;
+        }
+        if(result == 0){
+            return null;
+        }
+        return orderRecord;
     }
 }

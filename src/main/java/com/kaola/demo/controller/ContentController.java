@@ -5,11 +5,12 @@ import com.kaola.demo.meta.Content;
 import com.kaola.demo.model.ResultMap;
 import com.kaola.demo.service.ContentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -21,39 +22,51 @@ import java.util.UUID;
  * @Author: li ying
  * @Date: 2019/2/1 21:37
  */
-@RestController
+@Controller
 public class ContentController {
 
     @Resource
     private ContentService contentService;
 
-    @GetMapping("/getContent")
-    public ResultMap getContent(int id){
-        Content content = contentService.getContentById(id);
-        return ResultMap.genResultMap(CodeMsg.SUCCESS,content);
+    @RequestMapping(value = "/public", method = RequestMethod.GET)
+    public ModelAndView pul() {
+        return new ModelAndView("public");
     }
 
-    @GetMapping("/addContent")
-    public ResultMap addContent(Content content){
-        String s = checkContent(content);
+    @GetMapping("/getContent")
+    public ModelAndView getContent(int id,ModelMap map){
+        Content content = contentService.getContentById(id);
+        map.addAttribute("product",content);
+        return new ModelAndView("detail");
+    }
+
+    @PostMapping("/publicSubmit")
+    public ModelAndView addContent(@RequestParam("title") String title,
+                                   @RequestParam("remark") String summary,
+                                   @RequestParam("price") Double price,
+                                   @RequestParam("pictureUrl") String image,
+                                   @RequestParam("text") String detail, ModelMap map){
+       /* String s = checkContent(content);
         if( s != null){
             return ResultMap.genResultMap(CodeMsg.CONTENT_ERROR,s);
-        }
+        }*/
+       Content content = new Content();
+       content.setPictureUrl(image);
+       content.setPrice(String.valueOf(price));
+       content.setRemark(summary);
+       content.setTitle(title);
+       content.setText(detail);
         Content addContent = contentService.addContent(content);
-        if(addContent == null){
-            return ResultMap.genResultMap(CodeMsg.ERROR);
-        }else {
-            return ResultMap.genResultMap(CodeMsg.SUCCESS,addContent);
-        }
-
+        map.addAttribute("product", addContent);
+        return new ModelAndView("public");
     }
 
     @GetMapping("/updateContent")
     public ResultMap updateContent(Content content){
-        String s = checkContent(content);
+       /* String s = checkContent(content);
         if( s != null){
             return ResultMap.genResultMap(CodeMsg.CONTENT_ERROR,s);
-        }
+        }*/
         Content updateContent = contentService.updateContent(content);
         if(updateContent == null){
             return ResultMap.genResultMap(CodeMsg.ERROR);
@@ -75,6 +88,7 @@ public class ContentController {
     }
 
     @PostMapping("/upload")
+    @ResponseBody
     public ResultMap uploadPic(HttpServletRequest request){
         try {
             MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
@@ -113,7 +127,7 @@ public class ContentController {
         }
     }
 
-    public String checkContent(Content content){
+    /*public String checkContent(Content content){
         if(content.getTitle().length()<2 || content.getTitle().length() >80){
             return "标题长度要在2到80字符之内";
         }
@@ -124,5 +138,5 @@ public class ContentController {
             return "正文长度要在2到1000字符之内";
         }
         return null;
-    }
+    }*/
 }

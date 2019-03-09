@@ -21,8 +21,16 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     public ShoppingCart addShoppingCart(ShoppingCart shoppingCart) {
         List<ShoppingCart> carts = shoppingCartMapper.getByUserId(shoppingCart.getUserId());
         if(carts.isEmpty() || (!carts.contains(shoppingCart))){
-            ShoppingCart cart = shoppingCartMapper.addShoppingCart(shoppingCart);
-            return cart;
+            Integer result = 0;
+            try{
+                result   = shoppingCartMapper.addShoppingCart(shoppingCart);
+            }catch (Exception e){
+                return null;
+            }
+            if(result == 0){
+                return null;
+            }
+            return shoppingCart;
         }else {
             List<ShoppingCart> cartList = shoppingCartMapper.getByUserId(shoppingCart.getUserId());
             int num = shoppingCart.getNum();
@@ -32,15 +40,23 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                 }
             }
             shoppingCart.setNum(num);
-            ShoppingCart cart = shoppingCartMapper.updateShoppingCart(shoppingCart);
-            return cart;
+            Boolean aBoolean = shoppingCartMapper.updateShoppingCart(shoppingCart);
+            if(!aBoolean){
+                return null;
+            }
+            return shoppingCart;
         }
     }
 
     @Override
-    public ShoppingCart updateShoppingCart(ShoppingCart shoppingCart) {
-        ShoppingCart cart = shoppingCartMapper.updateShoppingCart(shoppingCart);
-        return cart;
+    public Boolean updateShoppingCart(ShoppingCart shoppingCart) {
+        Boolean a = false;
+        try {
+           a= shoppingCartMapper.updateShoppingCart(shoppingCart);
+        } catch (Exception e) {
+            return false;
+        }
+        return a;
     }
 
     @Override

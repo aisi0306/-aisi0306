@@ -1,20 +1,15 @@
 package com.kaola.demo.service.serviceImpl;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.kaola.demo.mapper.ContentMapper;
 import com.kaola.demo.mapper.OrderRecordMapper;
-import com.kaola.demo.enums.CodeMsg;
-import com.kaola.demo.enums.GoodType;
 import com.kaola.demo.meta.Content;
 import com.kaola.demo.meta.OrderRecord;
-import com.kaola.demo.model.ResultMap;
 import com.kaola.demo.service.IndexService;
-import com.kaola.demo.vo.ContentVo;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
@@ -29,30 +24,35 @@ public class IndexServiceImpl implements IndexService {
     private OrderRecordMapper recordMapper;
 
     @Override
-    public ResultMap getAllGoods(int userId) {
-        List<Content> contents = contentMapper.getAllGoods();
-        List<ContentVo> contentVos = Lists.newArrayList();
-        ContentVo contentVo ;
+    public List<Content> getAllGoods(int userId,String type) {
+        List<Content> allGoods = contentMapper.getAllGoods();
+        if("".equals(type)){
+          return  allGoods;
+        }
         HashSet<Integer> set = Sets.newHashSet();
-        if (userId > 0) {
-            List<OrderRecord> recordList = recordMapper.getOrderRecordByUserId(userId);
-            for (OrderRecord record : recordList) {
-                set.add(record.getGoodsId());
-            }
+        List<OrderRecord> recordList = recordMapper.getOrderRecordByUserId(userId);
+        for (OrderRecord record : recordList) {
+            set.add(record.getGoodsId());
         }
-
-        for (Content content1 : contents) {
-            contentVo = new ContentVo();
-            BeanUtils.copyProperties(content1, contentVo);
-
-            if (set.contains(contentVo.getId())) {
-                contentVo.setType(GoodType.SELLED.getCode());
-            } else {
-                contentVo.setType(GoodType.SELLING.getCode());
-            }
-            contentVos.add(contentVo);
+        List<Content> goods = new ArrayList<>();
+        //已购买
+        if("1".equals(type) && userId > 0){
+            allGoods.forEach(item->{
+             if(set.contains(item.getId())){
+                 goods.add(item);
+             }
+            });
+          return goods;
         }
-        ResultMap resultMap = ResultMap.genResultMap(CodeMsg.SUCCESS,contentVos);
-        return resultMap;
+        //未购买
+        if("2".equals(type) && userId > 0){
+            allGoods.forEach(item->{
+                if(!set.contains(item.getId())){
+                    goods.add(item);
+                }
+            });
+            return goods;
+        }
+        return allGoods;
     }
 }

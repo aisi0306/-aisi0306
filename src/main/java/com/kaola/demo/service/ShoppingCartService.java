@@ -11,7 +11,7 @@ import java.util.List;
 public interface ShoppingCartService {
     ShoppingCart addShoppingCart(ShoppingCart shoppingCart);
 
-    ShoppingCart updateShoppingCart(ShoppingCart shoppingCart);
+    Boolean updateShoppingCart(ShoppingCart shoppingCart);
 
     Boolean deleteShoppingCart(int id);
 

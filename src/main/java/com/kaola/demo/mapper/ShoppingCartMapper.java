@@ -20,12 +20,12 @@ public interface ShoppingCartMapper {
 
     @Insert("INSERT INTO shopping_cart(user_id,content_id,num) " +
             "VALUES(#{userId},#{contentId},#{num})")
-    ShoppingCart addShoppingCart(ShoppingCart shoppingCart);
+    Integer addShoppingCart(ShoppingCart shoppingCart);
 
     @Update("UPDATE shopping_cart SET user_id=#{userId},content_id=#{contentId},num=#{num} WHERE id=#{id}")
-    ShoppingCart updateShoppingCart(ShoppingCart shoppingCart);
+    Boolean updateShoppingCart(ShoppingCart shoppingCart);
 
-    @Delete("DELETE * FROM shopping_cart WHERE id=#{id}")
+    @Delete("DELETE  FROM shopping_cart WHERE id=#{id}")
     Boolean deleteshoppingCart(int id);
 
 }

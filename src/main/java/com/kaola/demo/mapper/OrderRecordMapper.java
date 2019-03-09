@@ -10,13 +10,13 @@ import java.util.List;
 @Mapper
 public interface OrderRecordMapper {
 
-    @Select("SELECT * FROM order_record WHERE userId=#{userId}")
+    @Select("SELECT * FROM order_record WHERE user_id=#{userId}")
     List<OrderRecord> getOrderRecordByUserId(int userId);
 
-    @Select("SELECT * FROM order_record WHERE goodsId=#{goodsId}")
+    @Select("SELECT * FROM order_record WHERE goods_id=#{goodsId}")
     List<OrderRecord> getOrderRecordByGoodId(int goodsId);
 
     @Insert("INSERT INTO order_record(order_time,price,count,goods_id,user_id) " +
             "VALUES(#{orderTime},#{price},#{count},#{goodsId},#{userId})")
-    OrderRecord addOrderRecord(OrderRecord orderRecord);
+    Integer addOrderRecord(OrderRecord orderRecord);
 }

@@ -30,24 +30,30 @@ public class ContentServiceImpl implements ContentService {
     private OrderRecordMapper recordMapper;
     @Override
     public Content addContent(Content content) {
-        Content content1 = null;
+        Integer result = 0;
         try{
-             content1 = contentMapper.addContent(content);
+           result   = contentMapper.addContent(content);
         }catch (Exception e){
-            logger.debug(content+"");
+            return null;
         }
-        return content1;
+        if(result == 0){
+            return null;
+        }
+        return content;
     }
 
     @Override
     public Content updateContent(Content content) {
-        Content content1 = null;
+        Integer result = 0;
         try{
-            content1 = contentMapper.updateContent(content);
+            result = contentMapper.updateContent(content);
         }catch (Exception e){
-            logger.debug(content+"");
+            return null;
         }
-        return content1;
+        if(result == 0){
+            return null;
+        }
+        return content;
     }
 
     /**
