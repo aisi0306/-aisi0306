@@ -29,6 +29,12 @@
         <tbody>
 			<#list settleAccountList as sa>
             <tr>
+                <td>
+
+                </td>
+                <td>
+
+                </td>
                <td class="title">
                     <a href="/getContent?id=${sa.contentId}" class="link">${sa.name}</a>
                 </td>
@@ -51,11 +57,15 @@
         <tr>
             <td colspan="6"></td>
             <td><button class="u-btn u-btn-primary" id="Account">结算</button></td>
+            <div  class="u-btn u-btn-primary">
+                <input type="button" name="Submit" value="返回上一页" onclick="javascript:window.history.back(-1);">
+            </div>
         </tr>
         </tfoot>
     </table>
     </#if>
 </div>
+
 <#include "include/footer.ftl">
 <script type="text/javascript" src="../js/global.js"></script>
 <script type="text/javascript" src="../js/settleAccount.js"></script>

@@ -46,4 +46,13 @@ public class ResultMap<T> {
         resultMap.setData(o);
         return resultMap;
     }
+
+    public static ResultMap genResultMap(CodeMsg codeMsg,String msg,Object o){
+        ResultMap resultMap = new ResultMap();
+        resultMap.setCode(codeMsg.getCode());
+        resultMap.setMessage(codeMsg.getMessage());
+        resultMap.setData(o);
+        resultMap.setMessage(msg);
+        return resultMap;
+    }
 }

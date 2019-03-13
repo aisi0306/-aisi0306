@@ -2,8 +2,13 @@ package com.kaola.demo.controller;
 
 import com.kaola.demo.enums.CodeMsg;
 import com.kaola.demo.meta.Content;
+import com.kaola.demo.meta.OrderRecord;
+import com.kaola.demo.meta.User;
 import com.kaola.demo.model.ResultMap;
 import com.kaola.demo.service.ContentService;
+import com.kaola.demo.service.OrderRecordService;
+import com.kaola.demo.vo.ContentVo;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -14,8 +19,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -28,15 +36,24 @@ public class ContentController {
     @Resource
     private ContentService contentService;
 
+    @Autowired
+    private OrderRecordService orderRecordService;
+
     @RequestMapping(value = "/public", method = RequestMethod.GET)
     public ModelAndView pul() {
         return new ModelAndView("public");
     }
 
     @GetMapping("/getContent")
-    public ModelAndView getContent(int id,ModelMap map){
+    public ModelAndView getContent(int id,ModelMap map,HttpSession session){
         Content content = contentService.getContentById(id);
-        map.addAttribute("product",content);
+        OrderRecord record = orderRecordService.getOrderRecordByUidAndCid(1, content.getId());
+        ContentVo contentVo = new ContentVo();
+        BeanUtils.copyProperties(content, contentVo);
+        if(record !=null) {
+            contentVo.setPrePrice(record.getPrice());
+        }
+        map.addAttribute("product", contentVo);
         return new ModelAndView("detail");
     }
 
@@ -46,10 +63,7 @@ public class ContentController {
                                    @RequestParam("price") Double price,
                                    @RequestParam("pictureUrl") String image,
                                    @RequestParam("text") String detail, ModelMap map){
-       /* String s = checkContent(content);
-        if( s != null){
-            return ResultMap.genResultMap(CodeMsg.CONTENT_ERROR,s);
-        }*/
+
        Content content = new Content();
        content.setPictureUrl(image);
        content.setPrice(String.valueOf(price));
@@ -57,39 +71,62 @@ public class ContentController {
        content.setTitle(title);
        content.setText(detail);
         Content addContent = contentService.addContent(content);
-        map.addAttribute("product", addContent);
-        return new ModelAndView("public");
+        if( addContent != null) {
+            map.addAttribute("product", addContent);
+            return new ModelAndView("redirect:/");
+        }else {
+            map.addAttribute("error", ResultMap.genResultMap(CodeMsg.ERROR,"发布失败"));
+            return new ModelAndView("error");
+        }
     }
 
-    @GetMapping("/updateContent")
-    public ResultMap updateContent(Content content){
-       /* String s = checkContent(content);
-        if( s != null){
-            return ResultMap.genResultMap(CodeMsg.CONTENT_ERROR,s);
-        }*/
+    @PostMapping("/updateContent")
+    public ModelAndView updateContent(@RequestParam("id") int id,
+                                      @RequestParam("title") String title,
+                                      @RequestParam("summary") String summary,
+                                      @RequestParam("price") Double price,
+                                      @RequestParam("image") String image,
+                                      @RequestParam("detail") String detail, ModelMap map){
+        Content content = new Content();
+        content.setId(id);
+        content.setPictureUrl(image);
+        content.setPrice(String.valueOf(price));
+        content.setRemark(summary);
+        content.setTitle(title);
+        content.setText(detail);
         Content updateContent = contentService.updateContent(content);
-        if(updateContent == null){
-            return ResultMap.genResultMap(CodeMsg.ERROR);
+        if(updateContent != null) {
+            map.addAttribute("product", updateContent);
+            return new ModelAndView("editSubmit");
         }else {
-           return ResultMap.genResultMap(CodeMsg.SUCCESS,updateContent);
+            map.addAttribute("error", ResultMap.genResultMap(CodeMsg.ERROR,"更新失败"));
+            return new ModelAndView("error");
         }
+    }
 
+    @GetMapping("/getUpdateContent")
+    public ModelAndView getUpdateContent(@RequestParam("id") Integer cid,ModelMap map){
+        Content updateContent = contentService.getContentById(cid);
+        map.addAttribute("product",updateContent);
+        return new ModelAndView("edit");
     }
 
     @GetMapping("/deleteContent")
-    public ResultMap deleteContent(int id){
+    public ModelAndView deleteContent(int id,ModelMap map){
        Boolean result = contentService.deleteContent(id);
         if(!result){
-            return ResultMap.genResultMap(CodeMsg.ERROR);
+            map.addAttribute("error",ResultMap.genResultMap(CodeMsg.ERROR,"无法删除以及出售的商品"));
+            return new ModelAndView("error");
         }else {
-            return ResultMap.genResultMap(CodeMsg.SUCCESS);
+            return  new ModelAndView("redirect:/");
         }
 
     }
 
     @PostMapping("/upload")
     @ResponseBody
-    public ResultMap uploadPic(HttpServletRequest request){
+    public ResultMap uploadPic(HttpSession session, HttpServletRequest request){
+        Map<String, Object> result = new HashMap<String, Object>();
         try {
             MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
             // 将文件放置位置设置为静态资源目录image中
@@ -121,7 +158,7 @@ public class ContentController {
                     + request.getServerName() + ":" + request.getServerPort()
                     + request.getContextPath() + "/image/" + imageName;
 
-            return ResultMap.genResultMap(CodeMsg.SUCCESS,imgUrl);
+            return ResultMap.genResultMap(CodeMsg.SUCCESS,"",imgUrl);
         } catch (Exception e) {
             return ResultMap.genResultMap(CodeMsg.ERROR);
         }

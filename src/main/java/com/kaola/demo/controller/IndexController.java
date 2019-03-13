@@ -4,6 +4,7 @@ import com.kaola.demo.meta.Content;
 import com.kaola.demo.meta.User;
 import com.kaola.demo.model.ResultMap;
 import com.kaola.demo.service.IndexService;
+import com.kaola.demo.vo.ContentVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -29,7 +30,7 @@ public class IndexController {
         User user = (User)session.getAttribute("user");
         int userId;
         userId = user == null? 0: user.getId();
-        List<Content> allGoods = indexService.getAllGoods(userId, type);
+        List<ContentVo> allGoods = indexService.getAllGoods(userId, type);
         map.addAttribute("products",allGoods);
         return new ModelAndView("index");
         //return   indexService.getAllGoods(user.getId(),type);

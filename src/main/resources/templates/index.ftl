@@ -10,7 +10,7 @@
         <div class="tab">
             <ul>
                 <li <#if listType?? || (listType != 1 && listType != 2)>class="z-sel"</#if> ><a href="/index">所有内容</a></li>
-                <#if user??>
+                <#if user?? && user.userType == 0>
                 <li <#if listType == '1'>class="z-sel"</#if> ><a href="/index?type=1">已购买的内容</a></li>
                 <li <#if listType == '2'>class="z-sel"</#if> ><a href="/index?type=2">未购买的内容</a></li>
                 </#if>
@@ -29,6 +29,11 @@
                     <a href="/getContent?id=${product.id}" class="link">
                         <div class="img"><img src="${product.pictureUrl}" alt="${product.title}"></div>
                         <h3>${product.title}</h3>
+                        <#if product.status?? || product.status?has_content>
+                        <h3>${product.status}</h3>
+                        <#else >
+                        <h3> </h3>
+                        </#if>
                         <div class="price"><span class="v-unit">¥</span><span class="v-value">${product.price}</span></div>
                     </a>
                 </li>

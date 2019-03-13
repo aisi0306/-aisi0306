@@ -26,9 +26,12 @@
         </thead>
         <tbody>
             <#list buyList as x>
-            <#assign total = total + x.price>
+            <#assign total =  x.total>
             <tr>
                 <td class="img"><a href="/snapshot?id=${x.id}"><img src="${x.pictureUrl}" alt=""></a></td>
+                <td>
+
+                </td>
                 <td class="title"><h4><a href="/snapshot?id=${x.id}">${x.title}</a></h4></td>
                 <td class="time"><span class="v-time">${x.orderTime?string("yyyy-MM-dd HH:mm")}</span></td>
                 <td class="price"><span class="v-unit">¥</span><span class="value">${x.price}</span></td>

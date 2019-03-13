@@ -14,4 +14,8 @@ public interface OrderRecordService {
     List<OrderRecordVo> getOrderRecordByUserId(int userId);
 
     OrderRecord addOrderRecord(OrderRecord orderRecord);
+
+    OrderRecord getOrderRecordByUidAndCid(int userId,int goodsId);
+
+
 }

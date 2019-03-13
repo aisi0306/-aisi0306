@@ -45,8 +45,9 @@ public class OrderRecordServiceImpl implements OrderRecordService {
             Content content = contentMapper.getGoodsById(record.getGoodsId());
             recordVo.setPictureUrl(content.getPictureUrl());
             recordVo.setTitle(content.getTitle());
-            recordVos.add(recordVo);
             total+=Double.valueOf(record.getPrice())*record.getCount();
+            recordVo.setTotal(String.valueOf(total));
+            recordVos.add(recordVo);
         }
         return recordVos;
     }
@@ -63,5 +64,11 @@ public class OrderRecordServiceImpl implements OrderRecordService {
             return null;
         }
         return orderRecord;
+    }
+
+    @Override
+    public OrderRecord getOrderRecordByUidAndCid(int userId, int goodsId) {
+
+        return orderRecordMapper.getOrderRecord(goodsId,userId);
     }
 }

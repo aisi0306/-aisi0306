@@ -16,11 +16,23 @@
         <div class="cnt">
             <h2>${product.title}</h2>
             <p class="summary">${product.remark}</p>
+            <#if !product.prePrice?? || user.userType == 1>
+                <div class="salePrice">
+                    价格：
+                    <span class="v-unit">¥</span>
+                    <span class="v-value">${product.price}</span>
+                </div>
+            <#else >
             <div class="salePrice">
-                价格：
+                购买时的价格：
                 <span class="v-unit">¥</span>
-                <span class="v-value">${product.price}</span>
+                <span class="v-value">${product.prePrice}</span>
             </div>
+            </#if>
+
+
+
+
             <div class="num">
                 数量：
                 <span id="plusNum" class="lessNum"><a>-</a></span>
@@ -30,9 +42,22 @@
             <div class="oprt f-cb">
                <#-- <button class="u-btn u-btn-primary" id="buy">
                     立即购买</button>-->
-                &emsp;&emsp;
+                &emsp;&emsp;<#if user.userType == 0 && !product.prePrice??>
                 <button class="u-btn u-btn-primary" id="add">
                     加入购物车</button>
+
+                   <#elseif  user.userType == 1>
+                   <div class="oprt f-cb">
+                       <a href="/getUpdateContent?id=${product.id}" class="u-btn u-btn-primary">编 辑</a>
+                   </div>
+               <div class="oprt f-cb">
+                   <a href="/deleteContent?id=${product.id}" class="u-btn u-btn-primary">删 除</a>
+               </div>
+               <#elseif  user.userType == 0 && product.prePrice??>
+                   <div class="oprt f-cb">
+                       <span class="u-btn u-btn-primary z-dis">已购买</span>
+                   </div>
+               </#if>
             </div>
                 </#if>
 

@@ -23,7 +23,7 @@ public interface ContentMapper {
             ",remark=#{remark},text=#{text} WHERE id=#{id}")
     Integer updateContent(Content content);
 
-    @Delete("DELETE * FROM content WHERE id=#{id}")
+    @Delete("DELETE  FROM content WHERE id=#{id}")
     Boolean deleteContent(int id);
 
 }

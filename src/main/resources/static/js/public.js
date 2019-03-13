@@ -64,7 +64,7 @@
                             if(json && json.code == 200){
                                 alert("文件上传成功");
                                 var o = JSON.parse(xhr.responseText);
-                                imageUrl = o && o.result;
+                                imageUrl = o && o.data;
                                 image.value = imageUrl;
                                 imgpre.src = imageUrl;
                             }else{
@@ -85,9 +85,10 @@
                 }
             }.bind(this),false);
             [title,summary,image,detail,price].forEach(function(item){
-                item.addEventListener('input',function(e){
+                if(item !== undefined){
+                item.addEventListener('input',function(e) {
                     item.classList.remove('z-err');
-                }.bind(this),false);
+                }.bind(this),false);}
             }.bind(this));
             image.addEventListener('input',function(e){
                 var value = image.value.trim();
@@ -105,12 +106,14 @@
                 [detail,function(value){return value.length<2 || value.length>1000}],
                 [price,function(value){return value == '' || !Number(value)}]
             ].forEach(function(item){
-                var value = item[0].value.trim();
-                if(item[1](value)){
-                    item[0].classList.add('z-err');
-                    result = false;
+                if(item[0] !== undefined) {
+                    var value = item[0].value.trim();
+                    if (item[1](value)) {
+                        item[0].classList.add('z-err');
+                        result = false;
+                    }
+                    item[0].value = value;
                 }
-                item[0].value = value;
             });
             if(imageMode == "fileUpload" && !imageUrl){
                 uploadInput.classList.add('z-err');
